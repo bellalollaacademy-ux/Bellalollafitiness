@@ -1,90 +1,91 @@
 import streamlit as st
+import pandas as pd
 
-# --- CONFIGURAÇÃO VISUAL BELLA LOLA ---
-st.set_page_config(page_title="Bella Lola Fitness - Premium", page_icon="🍂", layout="centered")
+# --- CONFIGURAÇÃO E DESIGN ARQUETÍPICO ---
+st.set_page_config(page_title="Bella Lola - O Despertar do Guerreiro", layout="centered")
 
-C_GOLDEN_BROWN = "#b87333"  
-C_TAN = "#d2b48c"           
-C_MEDIUM_TERRA = "#b0665c"  
-C_DARK_ROSEWOOD = "#58292d" 
-C_BLACK_BROWN = "#331811"   
+# Cores Outonais Profissionais
+C_GOLD = "#b87333"
+C_TAN = "#d2b48c"
+C_DARK = "#331811"
+C_RED = "#8b3a3a"
 
 st.markdown(f"""
     <style>
-    .stApp {{ background-color: {C_BLACK_BROWN}; color: white; }}
-    .main-title {{ text-align: center; color: {C_GOLDEN_BROWN}; font-size: 32px; font-weight: bold; margin-bottom: 0; }}
-    .sub-title {{ text-align: center; color: {C_TAN}; letter-spacing: 2px; font-size: 12px; margin-top: -10px; margin-bottom: 20px; }}
+    .stApp {{ background-color: {C_DARK}; color: white; font-family: 'Georgia', serif; }}
+    .main-title {{ text-align: center; color: {C_GOLD}; font-size: 35px; font-weight: bold; text-shadow: 2px 2px 4px #000; }}
+    .sub-title {{ text-align: center; color: {C_TAN}; letter-spacing: 2px; font-size: 14px; margin-top: -10px; font-style: italic; }}
+    .stButton>button {{ width: 100%; border-radius: 20px; background-color: {C_RED}; color: white; border: 1px solid {C_GOLD}; font-weight: bold; transition: 0.3s; }}
+    .stButton>button:hover {{ background-color: {C_GOLD}; color: {C_DARK}; transform: scale(1.02); }}
+    .metric-card {{ background: rgba(255,255,255,0.05); padding: 15px; border-radius: 15px; border-left: 5px solid {C_GOLD}; }}
     div[data-testid="column"] {{ width: 14% !important; min-width: 45px !important; flex: 1 1 0% !important; padding: 2px !important; }}
-    .stButton>button {{ width: 100%; border-radius: 8px; background-color: {C_DARK_ROSEWOOD}; color: {C_TAN}; border: 1px solid {C_MEDIUM_TERRA}; font-weight: bold; }}
-    .stButton>button:hover {{ border-color: {C_GOLDEN_BROWN}; color: white; }}
-    .stTabs [data-baseweb="tab-list"] button {{ color: {C_TAN} !important; }}
-    .stTabs [data-baseweb="tab-highlight"] {{ background-color: {C_GOLDEN_BROWN} !important; }}
     </style>
     """, unsafe_allow_html=True)
 
-# --- DICIONÁRIOS E ESTADOS ---
-METS = {"Caminhada 🚶": 120, "Corrida 🏃‍♀️": 180, "Bicicleta 🚲": 250, "Musculação 🏋️": 150, "HIIT 🔥": 240, "Dança 💃": 200}
-SENHA_MESTRE = "ALQUIMIA2024" 
-
+# --- ESTADOS DA SESSÃO ---
 if 'autenticado' not in st.session_state: st.session_state.autenticado = False
+if 'pesagem' not in st.session_state: st.session_state.pesagem = []
 if 'progresso' not in st.session_state: st.session_state.progresso = [False] * 21
 
-# --- TELA DE ACESSO ---
+# --- ACESSO ---
 if not st.session_state.autenticado:
     st.markdown("<h1 class='main-title'>BELLA LOLA FITNESS</h1>", unsafe_allow_html=True)
-    st.markdown("<p class='sub-title'>SISTEMA DE REPROGRAMAÇÃO NEURAL</p>", unsafe_allow_html=True)
-    senha_input = st.text_input("Chave de Acesso:", type="password")
-    if st.button("DESBLOQUEAR", key="btn_login"):
-        if senha_input == SENHA_MESTRE:
+    st.markdown("<p class='sub-title'>ALQUIMIA TRANSFORMAÇÃO & DOMÍNIO MENTAL</p>", unsafe_allow_html=True)
+    # IMAGEM SUBLIMINAR NO LOGIN (Foco e Poder)
+    st.image("https://images.unsplash.com", caption="VISUALIZE SUA VITÓRIA")
+    
+    senha = st.text_input("Chave do Portal:", type="password")
+    if st.button("REIVINDICAR MEU PODER", key="login"):
+        if senha == "ALQUIMIA2024":
             st.session_state.autenticado = True
             st.rerun()
-        else: st.error("Chave incorreta!")
-    st.stop()# --- APP PRINCIPAL ---
-st.markdown("<h1 class='main-title'>BELLA LOLA FITNESS</h1>", unsafe_allow_html=True)
+        else: st.error("A frequência da chave está incorreta.")
+    st.stop()
+with tab5:
+    st.subheader("🧬 Simulador de Metamorfose")
+    
+    # Entrada de dados para o gráfico
+    novo_p = st.number_input("Registre seu peso de hoje (kg):", value=p, step=0.1, key="input_evolucao")
+    
+    col_foto, col_info = st.columns([1, 2])
+    
+    with col_info:
+        if st.button("💾 SALVAR PESAGEM SEMANAL"):
+            st.session_state.pesagem.append(novo_p)
+            st.success("Registro gravado no seu Codex!")
+        
+        if st.session_state.pesagem:
+            st.line_chart(st.session_state.pesagem)
+            st.caption("Sua jornada em queda constante.")
 
-tab1, tab2, tab3, tab4 = st.tabs(["⚔️ JORNADA", "🏋️ TREINO", "🧪 ALQUIMIA", "📊 EVOLUÇÃO"])
+    # --- LÓGICA DO BONECO DE TRANSFORMAÇÃO ---
+    with col_foto:
+        # Calculamos o progresso atual baseado no peso inicial e atual
+        if p > 0 and a > 0:
+            imc_atual = p / (a**2)
+            
+            # Escolha da imagem baseada no IMC (Simbolismo do Guerreiro)
+            if imc_atual > 30:
+                # Estágio: Armadura Pesada (Início)
+                img_boneco = "https://cdn-icons-png.flaticon.com" 
+                txt_status = "🛡️ FASE: ARMADURA PESADA"
+            elif 25 <= imc_atual <= 29.9:
+                # Estágio: Soldado em Treino
+                img_boneco = "https://cdn-icons-png.flaticon.com"
+                txt_status = "⚔️ FASE: GUERREIRO AGUERRIDO"
+            else:
+                # Estágio: Mestre da Agilidade (Meta)
+                img_boneco = "https://cdn-icons-png.flaticon.com"
+                txt_status = "💎 FASE: MESTRE ALQUIMISTA"
 
-with tab1:
-    missoes = ["Dia 1: Identifique o 'Eu Antigo'.", "Dia 2: O Poder do Silêncio.", "Dia 3: Redução de Açúcar.", "Dia 4: Visualização.", "Dia 5: Jejum (12h).", "Dia 6: Afirmação Neural.", "Dia 7: Registro Codex.", "Dia 8: 3 respirações.", "Dia 9: Treino Consciente.", "Dia 10: Hidratação.", "Dia 11: Domínio Vontade.", "Dia 12: Áudio 528Hz.", "Dia 13: Jejum (14h).", "Dia 14: Gratidão.", "Dia 15: Nova Versão.", "Dia 16: Fim Sabotagem.", "Dia 17: Alimentos da Terra.", "Dia 18: Resiliência.", "Dia 19: Conexão Neural.", "Dia 20: Jejum (18h).", "Dia 21: Celebração."]
-    for r in range(3):
-        cols = st.columns(7)
-        for c in range(7):
-            idx = r * 7 + c
-            with cols[c]:
-                if st.session_state.progresso[idx]: st.button("✅", key=f"k{idx}", disabled=True)
-                else:
-                    if st.button(f"{idx+1}", key=f"k{idx}"):
-                        st.session_state.progresso[idx] = True
-                        st.rerun()
-    st.progress(sum(st.session_state.progresso) / 21)
-    st.info(f"🎯 {missoes[sum(st.session_state.progresso)] if sum(st.session_state.progresso) < 21 else 'CONCLUÍDO!'}")
-
-with tab2:
-    st.subheader("Forja Muscular")
-    tipo = st.selectbox("Treino de hoje:", list(METS.keys()), key="sel_treino")
-    tempo = st.number_input("Duração (min):", min_value=0, step=5, key="num_tempo")
-    if st.button("REGISTRAR ESFORÇO", key="btn_treino"):
-        cal = (METS[tipo] / 30) * tempo
-        st.success(f"🔥 Sensacional! Queimou ~{cal:.0f} calorias.")
-        st.balloons()
-
-with tab3:
-    st.subheader("🧪 Alquimia Biológica")
-    idade = st.number_input("Sua Idade:", min_value=18, max_value=80, value=30, key="num_idade")
-    horas_jejum = st.slider("Horas de Jejum:", 0, 24, 12, key="sli_jejum")
-    if horas_jejum < 12: st.info("🍴 **4-12h:** Queda de Insulina e Glicose.")
-    elif 12 <= horas_jejum < 18: st.success("🔥 **12-18h:** Queima de gordura e HGH elevado!")
-    else: st.error("🧬 **18h+:** Autofagia e Renovação Celular Profunda!")
-    st.divider()
-    if st.button("CONCLUÍ O BANHO GELADO 🥶", key="btn_banho"): st.success("Biologia resetada!")
-
-with tab4:
-    st.subheader("Medidas")
-    peso = st.number_input("Peso (kg)", step=0.1, key="num_peso")
-    if peso > 0: st.metric("Peso Atual", f"{peso}kg")
-    st.camera_input("Registro Visual (Codex)", key="cam_codex")
-
-if st.sidebar.button("Sair", key="btn_sair"):
-    st.session_state.autenticado = False
-    st.rerun()
-
+            st.image(img_boneco, width=120)
+            st.markdown(f"<p style='text-align:center; color:{C_GOLD}; font-size:12px;'><b>{txt_status}</b></p>", unsafe_allow_html=True)
+            
+    # Mensagem de Incentivo Personalizada
+    if len(st.session_state.pesagem) > 1:
+        perda_total = st.session_state.pesagem[0] - st.session_state.pesagem[-1]
+        if perda_total > 0:
+            st.balloons()
+            st.success(f"🏆 Você já transmutou **{perda_total:.1f}kg** de gordura em poder!")
+        else:
+            st.info("🔥 A constância é a chave. Mantenha o foco no protocolo!")
