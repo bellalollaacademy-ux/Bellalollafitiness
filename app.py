@@ -1,86 +1,102 @@
 import streamlit as st
 
-# --- CONFIGURAÇÃO VISUAL BELLA LOLA ---
-st.set_page_config(page_title="Bella Lola Fitness - Premium", page_icon="🔐")
+# --- CONFIGURAÇÃO VISUAL BELLA LOLA (CORES DA IMAGEM) ---
+st.set_page_config(page_title="Bella Lola Fitness - Premium", page_icon="🍂", layout="centered")
 
-# --- CHAVE DE ACESSO (A QUE VOCÊ VENDE) ---
+# Cores da Paleta Stitch Palettes:
+C_GOLDEN_BROWN = "#b87333"  # DMC 3826
+C_TAN = "#d2b48c"           # DMC 436
+C_MEDIUM_TERRA = "#b0665c"  # DMC 356
+C_DARK_TERRA = "#8b3a3a"    # DMC 3777
+C_DARK_ROSEWOOD = "#58292d" # DMC 3857
+C_BLACK_BROWN = "#331811"   # DMC 3371
+
+st.markdown(f"""
+    <style>
+    .stApp {{ background-color: {C_BLACK_BROWN}; color: white; }}
+    .main-title {{ text-align: center; color: {C_GOLDEN_BROWN}; font-size: 32px; font-weight: bold; margin-bottom: 0; }}
+    .sub-title {{ text-align: center; color: {C_TAN}; letter-spacing: 2px; font-size: 12px; margin-top: -10px; }}
+    
+    /* Estilo dos Botões */
+    div[data-testid="column"] {{ width: 14% !important; min-width: 45px !important; flex: 1 1 0% !important; padding: 2px !important; }}
+    .stButton>button {{ 
+        width: 100%; border-radius: 8px; background-color: {C_DARK_ROSEWOOD}; 
+        color: {C_TAN}; border: 1px solid {C_MEDIUM_TERRA}; font-weight: bold;
+    }}
+    .stButton>button:hover {{ border-color: {C_GOLDEN_BROWN}; color: white; }}
+    
+    /* Abas */
+    .stTabs [data-baseweb="tab-list"] button {{ color: {C_TAN} !important; }}
+    .stTabs [data-baseweb="tab-highlight"] {{ background-color: {C_GOLDEN_BROWN} !important; }}
+    </style>
+    """, unsafe_allow_html=True)
+
+# --- LOGICA DE ACESSO ---
 SENHA_MESTRE = "ALQUIMIA2024" 
 
-# --- CONTROLE DE ACESSO ---
-if 'autenticado' not in st.session_state:
-    st.session_state.autenticado = False
+if 'autenticado' not in st.session_state: st.session_state.autenticado = False
+if 'progresso' not in st.session_state: st.session_state.progresso = [False] * 21
 
 if not st.session_state.autenticado:
-    # TELA DE VENDAS E LOGIN
-    st.markdown("<h1 style='text-align: center; color: #00f2ff;'>BELLA LOLA FITNESS</h1>", unsafe_allow_html=True)
-    st.markdown("<p style='text-align: center;'>SISTEMA EXCLUSIVO DE REPROGRAMAÇÃO NEURAL</p>", unsafe_allow_html=True)
+    st.markdown("<h1 class='main-title'>BELLA LOLA FITNESS</h1>", unsafe_allow_html=True)
+    st.markdown("<p class='sub-title'>TRANSFORMAÇÃO NEURAL & ALQUIMIA</p>", unsafe_allow_html=True)
     
-    st.divider()
-    
-    col1, col2, col3 = st.columns([1,2,1])
-    with col2:
-        st.warning("🔒 CONTEÚDO RESTRITO A ALUNOS")
-        senha_input = st.text_input("Insira sua Chave de Acesso:", type="password")
-        
-        if st.button("DESBLOQUEAR MEU ACESSO"):
+    with st.container():
+        st.write("")
+        senha_input = st.text_input("Chave de Acesso:", type="password")
+        if st.button("DESBLOQUEAR"):
             if senha_input == SENHA_MESTRE:
                 st.session_state.autenticado = True
                 st.rerun()
-            else:
-                st.error("Chave inválida. Verifique seu e-mail de compra.")
-        
+            else: st.error("Chave incorreta!")
         st.divider()
-        st.info("✨ Ainda não é aluno? Toque no botão abaixo para adquirir sua chave.")
-        st.link_button("🔥 COMPRAR ACESSO AGORA", "https://seu-link-de-venda.com")
+        st.link_button("🔥 ADQUIRIR MINHA CHAVE", "https://seu-link-de-venda.com")
     st.stop()
 
-# --- ÁREA LOGADA ---
-st.markdown("<h1 style='text-align: center; color: #00f2ff;'>BEM-VINDA, GUERREIRA!</h1>", unsafe_allow_html=True)
-
-if 'progresso' not in st.session_state: 
-    st.session_state.progresso = [False] * 21
+# --- ÁREA DO ALUNO ---
+st.markdown("<h1 class='main-title'>BELLA LOLA FITNESS</h1>", unsafe_allow_html=True)
 
 missoes = [
-    "Dia 1: Identifique o 'Eu Antigo' e seus gatilhos.", "Dia 2: O Poder do Silêncio. 5 min de meditação.",
-    "Dia 3: Redução de Açúcar. Limpando os receptores.", "Dia 4: Visualização do Guerreiro(a).",
-    "Dia 5: Início do Jejum (12h). Controle hormonal.", "Dia 6: Afirmação: 'Eu comando minha biologia'.",
-    "Dia 7: Registro no Codex. Encare sua sombra.", "Dia 8: Troque o impulso por 3 respirações profundas.",
-    "Dia 9: Treino Consciente. Sinta cada músculo.", "Dia 10: Hidratação Estratégica.",
-    "Dia 11: Domínio da Vontade. Espere o desejo passar.", "Dia 12: Ouça o Áudio 528Hz de Reparação.",
-    "Dia 13: Ampliação do Jejum (14h-16h).", "Dia 14: Gratidão pelas micro-vitórias.",
-    "Dia 15: Comporte-se como sua versão de 10kg a menos.", "Dia 16: O Fim da Autossabotagem.",
-    "Dia 17: Alimentos da Terra. Nutrição Pura.", "Dia 18: Resiliência. Cair e levantar rápido.",
-    "Dia 19: Conexão Neural. Sinta a mudança interna.", "Dia 20: Jejum Profundo (18h). Limpeza Total.",
-    "Dia 21: Celebração. O Nascimento do Novo Eu."
+    "Dia 1: Identifique o 'Eu Antigo'.", "Dia 2: O Poder do Silêncio.", "Dia 3: Redução de Açúcar.",
+    "Dia 4: Visualização do Guerreiro.", "Dia 5: Início do Jejum (12h).", "Dia 6: Afirmação Neural.",
+    "Dia 7: Registro no Codex.", "Dia 8: 3 respirações profundas.", "Dia 9: Treino Consciente.",
+    "Dia 10: Hidratação Estratégica.", "Dia 11: Domínio da Vontade.", "Dia 12: Áudio 528Hz.",
+    "Dia 13: Jejum (14h-16h).", "Dia 14: Gratidão.", "Dia 15: Comporte-se como sua nova versão.",
+    "Dia 16: Fim da Autossabotagem.", "Dia 17: Alimentos da Terra.", "Dia 18: Resiliência.",
+    "Dia 19: Conexão Neural.", "Dia 20: Jejum Profundo (18h).", "Dia 21: Celebração do Novo Eu."
 ]
 
-with st.expander("📊 MEU PAINEL DE MEDIDAS"):
-    c1, c2 = st.columns(2)
-    peso = c1.number_input("Peso Atual (kg)", step=0.1)
-    altura = c2.number_input("Altura (m)", step=0.01)
-    if peso > 0 and altura > 0:
-        st.metric("Seu IMC", f"{peso/(altura**2):.1f}")
+tab1, tab2 = st.tabs(["⚔️ JORNADA 21 DIAS", "📊 EVOLUÇÃO"])
 
-st.subheader("⚔️ JORNADA 21 DIAS")
-cols = st.columns(7)
-for i in range(21):
-    with cols[i % 7]:
-        if st.session_state.progresso[i]:
-            st.button(f"✅", key=f"d{i}", disabled=True)
-        else:
-            if st.button(f"{i+1}", key=f"d{i}"):
-                st.session_state.progresso[i] = True
-                st.rerun()
+with tab1:
+    # Grade de Botões (7 por linha)
+    for row in range(3):
+        cols = st.columns(7)
+        for col in range(7):
+            idx = row * 7 + col
+            with cols[col]:
+                if st.session_state.progresso[idx]:
+                    st.button("✅", key=f"p{idx}", disabled=True)
+                else:
+                    if st.button(f"{idx+1}", key=f"p{idx}"):
+                        st.session_state.progresso[idx] = True
+                        st.rerun()
+    
+    concluidos = sum(st.session_state.progresso)
+    st.progress(concluidos / 21)
+    if concluidos < 21:
+        st.info(f"🎯 **HOJE:** {missoes[concluidos]}")
+    else: st.success("🌟 METAMORFOSE CONCLUÍDA!")
 
-atual = sum(st.session_state.progresso)
-st.progress(atual / 21)
+with tab2:
+    st.subheader("Medidas e Progresso")
+    peso = st.number_input("Peso (kg)", step=0.1)
+    meta = st.number_input("Meta (kg)", step=0.1)
+    if peso > 0:
+        st.metric("Peso Atual", f"{peso}kg", delta=f"{meta-peso:.1f}kg p/ meta")
+    st.divider()
+    st.camera_input("Registro Visual (Codex)")
 
-if atual < 21:
-    st.info(f"🚀 **SUA MISSÃO:** {missoes[atual]}")
-else:
-    st.balloons()
-    st.success("METAMORFOSE COMPLETA NO STUDIO BELLA LOLA!")
-
-if st.sidebar.button("Sair do Sistema"):
+if st.sidebar.button("Sair"):
     st.session_state.autenticado = False
     st.rerun()
