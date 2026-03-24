@@ -40,7 +40,7 @@ if not st.session_state.autenticado:
             st.session_state.autenticado = True
             st.rerun()
         else: st.error("A frequência da chave está incorreta.")
-    st.stop()# --- APP PRINCIPAL (LOGADO) ---
+    st.stop() # --- APP PRINCIPAL (LOGADO) ---
 st.markdown("<h1 class='main-title'>BELLA LOLA FITNESS</h1>", unsafe_allow_html=True)
 
 # AQUI ESTÁ A CORREÇÃO: Definindo as 5 abas corretamente
