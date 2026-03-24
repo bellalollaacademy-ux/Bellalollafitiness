@@ -40,52 +40,86 @@ if not st.session_state.autenticado:
             st.session_state.autenticado = True
             st.rerun()
         else: st.error("A frequência da chave está incorreta.")
-    st.stop()
+    st.stop()# --- APP PRINCIPAL (LOGADO) ---
+st.markdown("<h1 class='main-title'>BELLA LOLA FITNESS</h1>", unsafe_allow_html=True)
+
+tab1, tab2, tab3, tab4, tab5 = st.tabs(["⚔️ JORNADA", "🏋️ TREINO", "🧪 ALQUIMIA", "🧠 NEURO", "📈 EVOLUÇÃO"])
+
+with tab1:
+    st.subheader(f"Missão de 21 Dias")
+    concluidos = sum(st.session_state.progresso)
+    for r in range(3):
+        cols = st.columns(7)
+        for c in range(7):
+            idx = r * 7 + c
+            with cols[c]:
+                label = "✅" if st.session_state.progresso[idx] else f"{idx+1}"
+                if st.button(label, key=f"k{idx}"):
+                    st.session_state.progresso[idx] = True
+                    st.rerun()
+    st.progress(concluidos/21)
+    if st.button("🚨 SOS: COMPULSÃO!", key="sos"):
+        st.warning("⚠️ **PARE!** Respire fundo 4 vezes. Beba água. A fome é uma onda, ela vai passar. Você é o Comandante!")
+
+with tab2:
+    st.subheader("Forja Muscular")
+    tipo = st.selectbox("Treino de hoje:", list(METS.keys()), key="sel_treino")
+    tempo = st.number_input("Duração (min):", min_value=0, step=5, key="num_tempo")
+    if st.button("REGISTRAR ESFORÇO", key="btn_treino"):
+        cal = (METS[tipo] / 30) * tempo
+        st.success(f"🔥 Sensacional! Queimou ~{cal:.0f} calorias.")
+        st.balloons()
+
+with tab3:
+    st.subheader("🧪 Alquimia Biológica")
+    idade = st.number_input("Sua Idade:", min_value=18, max_value=80, value=30, key="num_idade")
+    horas_jejum = st.slider("Horas de Jejum:", 0, 24, 12, key="sli_jejum")
+    if horas_jejum < 12: st.info("🍴 **4-12h:** Queda de Insulina e Glicose.")
+    elif 12 <= horas_jejum < 18: st.success("🔥 **12-18h:** Queima de gordura e HGH elevado!")
+    else: st.error("🧬 **18h+:** Autofagia e Renovação Celular Profunda!")
+    st.write("**Pode beber:** Água, Café e Chá (puros).")
+    if st.button("CONCLUÍ O BANHO GELADO 🥶", key="btn_banho"): st.success("Dopamina e Metabolismo resetados!")
+
+with tab4:
+    st.subheader("Reprogramação Mental")
+    st.image("https://images.unsplash.com", caption="VISUALIZE O FOCO")
+    st.markdown("**Decretos de Poder:**\n* 'Eu comando minha fome.'\n* 'Meu corpo é energia pura.'")
+    st.link_button("🎧 OUVIR FREQUÊNCIA 528Hz", "https://www.youtube.com")
+
 with tab5:
     st.subheader("🧬 Simulador de Metamorfose")
+    p_atual = st.number_input("Peso de hoje (kg):", value=70.0, step=0.1, key="input_evolucao")
+    a_m = st.number_input("Altura (m):", value=1.65, step=0.01, key="input_alt_evol")
     
-    # Entrada de dados para o gráfico
-    novo_p = st.number_input("Registre seu peso de hoje (kg):", value=p, step=0.1, key="input_evolucao")
-    
-    col_foto, col_info = st.columns([1, 2])
-    
-    with col_info:
-        if st.button("💾 SALVAR PESAGEM SEMANAL"):
-            st.session_state.pesagem.append(novo_p)
-            st.success("Registro gravado no seu Codex!")
-        
-        if st.session_state.pesagem:
-            st.line_chart(st.session_state.pesagem)
-            st.caption("Sua jornada em queda constante.")
+    if st.button("💾 SALVAR NO CODEX"):
+        st.session_state.pesagem.append(p_atual)
+        st.rerun()
 
-    # --- LÓGICA DO BONECO DE TRANSFORMAÇÃO ---
-    with col_foto:
-        # Calculamos o progresso atual baseado no peso inicial e atual
-        if p > 0 and a > 0:
-            imc_atual = p / (a**2)
-            
-            # Escolha da imagem baseada no IMC (Simbolismo do Guerreiro)
-            if imc_atual > 30:
-                # Estágio: Armadura Pesada (Início)
-                img_boneco = "https://cdn-icons-png.flaticon.com" 
-                txt_status = "🛡️ FASE: ARMADURA PESADA"
-            elif 25 <= imc_atual <= 29.9:
-                # Estágio: Soldado em Treino
-                img_boneco = "https://cdn-icons-png.flaticon.com"
-                txt_status = "⚔️ FASE: GUERREIRO AGUERRIDO"
-            else:
-                # Estágio: Mestre da Agilidade (Meta)
-                img_boneco = "https://cdn-icons-png.flaticon.com"
-                txt_status = "💎 FASE: MESTRE ALQUIMISTA"
+    st.divider()
+    c_boneco, c_comando = st.columns([1, 2])
 
-            st.image(img_boneco, width=120)
-            st.markdown(f"<p style='text-align:center; color:{C_GOLD}; font-size:12px;'><b>{txt_status}</b></p>", unsafe_allow_html=True)
-            
-    # Mensagem de Incentivo Personalizada
-    if len(st.session_state.pesagem) > 1:
-        perda_total = st.session_state.pesagem[0] - st.session_state.pesagem[-1]
-        if perda_total > 0:
-            st.balloons()
-            st.success(f"🏆 Você já transmutou **{perda_total:.1f}kg** de gordura em poder!")
+    if p_atual > 0 and a_m > 0:
+        imc = p_atual / (a_m**2)
+        if imc >= 30:
+            fase, img, cor = "🛡️ ARMADURA PESADA", "https://cdn-icons-png.flaticon.com", "#8b3a3a"
+            msg = "'Eu libero o peso que não me pertence. Minha mente comanda, minha gordura obedece.'"
+        elif 25 <= imc < 30:
+            fase, img, cor = "⚔️ GUERREIRO EM ASCENSÃO", "https://cdn-icons-png.flaticon.com", "#b87333"
+            msg = "'Minha armadura está ficando leve. Sinto o prazer da disciplina superando o excesso.'"
         else:
-            st.info("🔥 A constância é a chave. Mantenha o foco no protocolo!")
+            fase, img, cor = "💎 MESTRE ALQUIMISTA", "https://cdn-icons-png.flaticon.com", "#D4AF37"
+            msg = "'O templo está em equilíbrio. Eu sou a prova de que a mente molda a matéria.'"
+
+        with c_boneco:
+            st.image(img, width=110)
+            st.markdown(f"<p style='text-align:center; color:{cor}; font-weight:bold; font-size:12px;'>{fase}</p>", unsafe_allow_html=True)
+        with c_comando:
+            st.info(f"**COMANDO CEREBRAL:**\n\n{msg}")
+
+    if st.session_state.pesagem:
+        st.line_chart(st.session_state.pesagem)
+
+if st.sidebar.button("FECHAR PORTAL (Sair)", key="btn_sair"):
+    st.session_state.autenticado = False
+    st.rerun()
+
