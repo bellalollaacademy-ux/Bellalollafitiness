@@ -12,8 +12,8 @@ if 'autenticado' not in st.session_state:
 
 if not st.session_state.autenticado:
     # TELA DE VENDAS E LOGIN
-    st.markdown("<h1 style='text-align: center; color: #00f2ff;'>BELLA LOLA FITNESS</h1>", unsafe_allow_argument=True)
-    st.markdown("<p style='text-align: center;'>SISTEMA EXCLUSIVO DE REPROGRAMAÇÃO NEURAL</p>", unsafe_allow_argument=True)
+    st.markdown("<h1 style='text-align: center; color: #00f2ff;'>BELLA LOLA FITNESS</h1>", unsafe_allow_html=True)
+    st.markdown("<p style='text-align: center;'>SISTEMA EXCLUSIVO DE REPROGRAMAÇÃO NEURAL</p>", unsafe_allow_html=True)
     
     st.divider()
     
@@ -30,12 +30,12 @@ if not st.session_state.autenticado:
                 st.error("Chave inválida. Verifique seu e-mail de compra.")
         
         st.divider()
-        st.info("✨ Ainda não é aluno? Toque no botão abaixo para adquirir sua chave e começar a transformação.")
-        st.link_button("🔥 COMPRAR ACESSO AGORA", "https://seu-link-de-venda.com") # COLOQUE SEU LINK AQUI
-    st.stop() # Interrompe o app aqui para quem não tem senha
+        st.info("✨ Ainda não é aluno? Toque no botão abaixo para adquirir sua chave.")
+        st.link_button("🔥 COMPRAR ACESSO AGORA", "https://seu-link-de-venda.com")
+    st.stop()
 
-# --- ÁREA LOGADA (SÓ APARECE APÓS A SENHA) ---
-st.markdown("<h1 style='text-align: center; color: #00f2ff;'>BEM-VINDA, GUERREIRA!</h1>", unsafe_allow_argument=True)
+# --- ÁREA LOGADA ---
+st.markdown("<h1 style='text-align: center; color: #00f2ff;'>BEM-VINDA, GUERREIRA!</h1>", unsafe_allow_html=True)
 
 if 'progresso' not in st.session_state: 
     st.session_state.progresso = [False] * 21
@@ -54,7 +54,6 @@ missoes = [
     "Dia 21: Celebração. O Nascimento do Novo Eu."
 ]
 
-# Dashboard de Medidas (Agora dentro da área paga)
 with st.expander("📊 MEU PAINEL DE MEDIDAS"):
     c1, c2 = st.columns(2)
     peso = c1.number_input("Peso Atual (kg)", step=0.1)
@@ -62,7 +61,6 @@ with st.expander("📊 MEU PAINEL DE MEDIDAS"):
     if peso > 0 and altura > 0:
         st.metric("Seu IMC", f"{peso/(altura**2):.1f}")
 
-# Desafio 21 Dias
 st.subheader("⚔️ JORNADA 21 DIAS")
 cols = st.columns(7)
 for i in range(21):
@@ -83,6 +81,6 @@ else:
     st.balloons()
     st.success("METAMORFOSE COMPLETA NO STUDIO BELLA LOLA!")
 
-if st.button("Sair do Sistema"):
+if st.sidebar.button("Sair do Sistema"):
     st.session_state.autenticado = False
     st.rerun()
