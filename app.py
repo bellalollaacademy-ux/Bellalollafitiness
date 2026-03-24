@@ -99,4 +99,51 @@ with tab2:
 
 if st.sidebar.button("Sair"):
     st.session_state.autenticado = False
+    st.rerun()# --- APP PRINCIPAL (LOGADO) ---
+st.markdown("<h1 class='main-title'>BELLA LOLA FITNESS</h1>", unsafe_allow_html=True)
+
+tab1, tab2, tab3, tab4 = st.tabs(["⚔️ JORNADA", "🏋️ TREINO", "🧪 ALQUIMIA", "📊 EVOLUÇÃO"])
+
+with tab1:
+    missoes = ["Dia 1: Identifique o 'Eu Antigo'.", "Dia 2: O Poder do Silêncio.", "Dia 3: Redução de Açúcar.", "Dia 4: Visualização.", "Dia 5: Jejum (12h).", "Dia 6: Afirmação Neural.", "Dia 7: Registro Codex.", "Dia 8: 3 respirações.", "Dia 9: Treino Consciente.", "Dia 10: Hidratação.", "Dia 11: Domínio Vontade.", "Dia 12: Áudio 528Hz.", "Dia 13: Jejum (14h-16h).", "Dia 14: Gratidão.", "Dia 15: Nova Versão.", "Dia 16: Fim Sabotagem.", "Dia 17: Alimentos da Terra.", "Dia 18: Resiliência.", "Dia 19: Conexão Neural.", "Dia 20: Jejum (18h).", "Dia 21: Celebração."]
+    for r in range(3):
+        cols = st.columns(7)
+        for c in range(7):
+            idx = r * 7 + c
+            with cols[c]:
+                if st.session_state.progresso[idx]: st.button("✅", key=f"p{idx}", disabled=True)
+                else:
+                    if st.button(f"{idx+1}", key=f"p{idx}"):
+                        st.session_state.progresso[idx] = True
+                        st.rerun()
+    st.progress(sum(st.session_state.progresso) / 21)
+    st.info(f"🎯 {missoes[sum(st.session_state.progresso)] if sum(st.session_state.progresso) < 21 else 'CONCLUÍDO!'}")
+
+with tab2:
+    st.subheader("Forja Muscular")
+    tipo = st.selectbox("Treino de hoje:", list(METS.keys()))
+    tempo = st.number_input("Duração (min):", min_value=0, step=5)
+    if st.button("REGISTRAR ESFORÇO"):
+        cal = (METS[tipo] / 30) * tempo
+        st.success(f"🔥 Sensacional! Queimou ~{cal:.0f} calorias.")
+        st.balloons()
+
+with tab3:
+    st.subheader("🧪 Alquimia Biológica")
+    idade = st.number_input("Sua Idade:", min_value=18, max_value=80, value=30)
+    horas_jejum = st.slider("Horas de Jejum:", 0, 24, 12)
+    if horas_jejum < 12: st.info("🍴 Fase de Absorção.")
+    elif 12 <= horas_jejum < 16: st.success("🔥 Queima de Gordura Ativa!")
+    else: st.error("🧬 Autofagia (Faxina Celular) Iniciada!")
+    st.divider()
+    if st.button("CONCLUÍ O BANHO GELADO 🥶"): st.success("Dopamina e Imunidade no topo!")
+
+with tab4:
+    st.subheader("Medidas")
+    peso = st.number_input("Peso (kg)", step=0.1)
+    if peso > 0: st.metric("Peso Atual", f"{peso}kg")
+    st.camera_input("Registro Visual (Codex)")
+
+if st.sidebar.button("Sair"):
+    st.session_state.autenticado = False
     st.rerun()
